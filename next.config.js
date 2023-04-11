@@ -2,12 +2,11 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        remotePatterns: [
-            {
-                hostname: 'image.tmdb.org',
-            },
+        domains: [
+            'image.tmdb.org',
+            'bit.ly',
         ],
     },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
