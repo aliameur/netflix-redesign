@@ -4,12 +4,16 @@ import Header from "@/components/Header";
 import Banner from "@/components/Banner";
 import Row from "@/components/Row"
 import Modal from "@/components/Modal"
-
 import requests from "@/utils/requests";
 import {Movie} from "@/typings";
 import useAuth from "@/hooks/useAuth";
 import {useRecoilValue} from "recoil";
-import {modalState} from "@/atoms/modalAtom";
+import {modalState, movieState} from "@/atoms/modalAtom";
+import Plans from "@/components/Plans";
+import {getProducts, Product} from "@stripe/firestore-stripe-payments";
+import payments from "@/lib/stripe";
+import useSubscription from "@/hooks/useSubscription";
+import useList from "@/hooks/useList";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -22,6 +26,7 @@ interface Props {
     horrorMovies: Movie[]
     romanceMovies: Movie[]
     documentaries: Movie[]
+    products: Product[]
 }
 
 export default function Home({
@@ -33,13 +38,19 @@ export default function Home({
                                  romanceMovies,
                                  topRated,
                                  trendingNow,
+                                 products,
                              }: Props) {
-    const {logout, loading} = useAuth()
+    const {logout, loading, user} = useAuth()
     const showModal = useRecoilValue(modalState)
+    const subscription = useSubscription(user)
+    const movie = useRecoilValue(movieState)
+    const list = useList(user?.uid)
 
-    if (loading) {
-        return null
-    }
+
+    if (loading || subscription === null) return null
+
+    if (!subscription) return <Plans products={products}/>
+
     return (
         <div className="relative h-screen bg-gradient-to-b lg:h-[100vh]">
             <Head>
@@ -55,6 +66,7 @@ export default function Home({
                     <Row title="Top Rated" movies={topRated}/>
                     <Row title="Action Thrillers" movies={actionMovies}/>
                     {/* My List Component */}
+                    {list.length > 0 && <Row title="My List" movies={list}/>}
                     <Row title="Comedies" movies={comedyMovies}/>
                     <Row title="Scary Movies" movies={horrorMovies}/>
                     <Row title="Romance Movies" movies={romanceMovies}/>
@@ -67,6 +79,10 @@ export default function Home({
 }
 
 export const getServerSideProps = async () => {
+    const products = await getProducts(payments, {
+        includePrices: true,
+        activeOnly: true
+    }).then((res) => res).catch((error) => console.log(error.message))
     const [
         netflixOriginals,
         trendingNow,
@@ -97,6 +113,7 @@ export const getServerSideProps = async () => {
             horrorMovies: horrorMovies.results,
             romanceMovies: romanceMovies.results,
             documentaries: documentaries.results,
+            products,
         },
     }
 }

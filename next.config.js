@@ -7,6 +7,7 @@ const nextConfig = {
             'bit.ly',
         ],
     },
+    transpilePackages: ["@stripe/firestore-stripe-payments"]
 };
 
 module.exports = nextConfig;
