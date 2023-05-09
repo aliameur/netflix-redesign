@@ -44,7 +44,7 @@ function Plans({products}: Props) {
             </header>
 
             <main className=" mx-auto pt-28 max-w-5xl px-5 pb-12 transition-all md:px-10">
-                <h1 className="mb-3 text-3xl font-medium">Choose the plan that's right for you</h1>
+                <h1 className="mb-3 text-3xl font-medium">Choose the plan that&apos;s right for you</h1>
                 <ul>
                     <li className="flex items-center gap-x-2 text-lg">
                         <CheckIcon className="h-7 w-7 text-[#E50914]"/> Watch all you want. Ad-free.
