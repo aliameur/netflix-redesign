@@ -55,7 +55,7 @@ export default function Home({
         <div className="relative h-screen bg-gradient-to-b lg:h-[100vh]">
             <Head>
                 <title>Home - Netflix</title>
-                <link rel="stylesheet" href="/favicon.ico"/>
+                <link rel="icon" href="/favicon.ico"/>
             </Head>
 
             <Header/>

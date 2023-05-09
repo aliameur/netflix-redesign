@@ -107,6 +107,8 @@ function Modal() {
 
     const handleClose = () => {
         setShowModal(false)
+        setMovie(null)
+        toast.dismiss()
     }
 
     return (
